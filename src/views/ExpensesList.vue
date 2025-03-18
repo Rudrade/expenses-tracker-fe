@@ -3,22 +3,29 @@
         :rowData="rowData"
         :columnDefs="columnDefs"
         style="height: 80%; width: 80%;"
-        :theme="myTheme"/>
+        :theme="myTheme"
+        pagination="true"/>
 </template>
 
 <script setup>
 import { AgGridVue } from "ag-grid-vue3"
-import { ref } from "vue"
+import { onMounted, ref } from "vue"
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; 
 import { themeQuartz, iconSetQuartzLight } from 'ag-grid-community';
+import { listExpenses } from "../services/ExpensesService";
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-const rowData = ref([
-    { date: new Date(Date.now()), description: "Teste", amount: 50.85, category: "Lazer", necessity: "Nenhuma"}
-]);
+const rowData = ref([]);
 
+onMounted(() => {
+    listExpenses().then((lst) => {
+        rowData.value = lst;
+    });
+});
+
+// ############ Define table ############## //
 const columnDefs = ref([
     { 
         field: "date",
