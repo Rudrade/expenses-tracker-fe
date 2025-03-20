@@ -9,9 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "ag-grid-community": "^33.1.1",
-    "ag-grid-vue3": "^33.1.1",
     "axios": "^1.8.3",
+    "bootstrap": "^5.3.3",
+    "datatables.net-bs5": "^2.2.2",
+    "datatables.net-datetime": "^1.5.5",
+    "datatables.net-vue3": "^3.0.4",
     "expenses-tracker": "file:",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"

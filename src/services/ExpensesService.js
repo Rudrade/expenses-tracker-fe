@@ -8,13 +8,14 @@ const axiosInstance = axios.create({
 export const listExpenses = () => (
     axiosInstance.get("/expense")
     .then((response) => {
+        console.log(response);
         const expenses = [];
 
-        for (let i = 0; i < response.data.length; i++) {
-            const expense = response.data[i];
+        for (let i = 0; i < response.data.expenses.length; i++) {
+            const expense = response.data.expenses[i];
 
             expenses.push({
-                date: new Date(expense.dateOfCreation),
+                date: expense.dateOfCreation,
                 description: expense.description,
                 amount: expense.amount,
                 category: expense.category,
