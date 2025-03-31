@@ -5,11 +5,17 @@ const axiosInstance = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_URL
 });
 
-export const listExpenses = (offset, limit) => {
+export const listExpenses = (offset, limit, description, category, necessity, startDate, endDate) => {
+    console.log("listExpenses", offset, limit, description);
     return axiosInstance.get("/expense", {
         params: {
             offset,
-            limit
+            limit,
+            description,
+            category,
+            necessity,
+            startDate,
+            endDate
         }
     })
     .then(response => {

@@ -52,3 +52,12 @@ a {
 .menu-active {
     color: #004080;
 }
+
+/* TABLE */
+.p-datatable-column-filter-button {
+    display: none !important
+}
+
+.p-datatable-header-cell {
+    min-width: 5rem;
+}
