@@ -16,14 +16,16 @@
         dataKey="id">
             
             <template #header>
-                <span class="text-xl font-bold">Expenses</span>
+                <div>
+                    <span class="text-xl font-bold">Expenses</span>
+                    <Button icon="pi pi-plus" rounded severity="contrast" @click="() => {$router.push({name: 'expense', params: {id:'new'}})}"/>
+                </div>
             </template>
             
             <template #empty>No expenses found</template>
             
             <template #loading>Loading expenses. Please wait.</template>
 
-            <Column field="id" header="ID"/>
             <Column field="date" header="Date" style="min-width: 10rem">
                 <template #body="{data}">
                     {{formatDate(new Date(data.date))}}
@@ -76,8 +78,10 @@ import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import InputText from 'primevue/inputtext';
 import DatePicker from "primevue/datepicker";
+import Button from "primevue/button";
 
 import { listExpenses } from "@/services/ExpensesService";
+import { formatDate, formatCurrency } from "@/utils";
 
 import { onMounted, ref } from "vue";
 
@@ -87,22 +91,6 @@ const totalExpenses = ref(0);
 onMounted(() => {
     renderPage();
 });
-
-const formatCurrency = (value) => {
-    return new Intl.NumberFormat("pt-PT", {
-        style: "currency",
-        currency: "EUR"
-    }).format(value);
-};
-
-const formatDate = (value) => {
-    console.log("formatDate", value);
-    if (!(value instanceof Date)) return null;
-
-    return value.getFullYear() + "-" + 
-        String(value.getMonth() + 1).padStart(2, "0") + "-" + 
-        String(value.getDate()).padStart(2, "0");
-}
 
 const renderPage = (event) => {
     console.log("%c ########## render page", "color: green;", event);

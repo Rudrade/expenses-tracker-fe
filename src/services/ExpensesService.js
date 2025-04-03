@@ -1,4 +1,5 @@
 import axios from "axios"
+import { formatDate } from "@/utils";
 
 // ############ AXIOS ###########
 const axiosInstance = axios.create({
@@ -37,6 +38,25 @@ export const listExpenses = (offset, limit, description, category, necessity, st
             expenses: arrExpenses,
             count: response.data.count
         };
+    })
+    .catch(error => {
+        console.error(error); // TODO: Toast
+        throw error;
+    })
+}
+
+export const createExpense = (description, date, amount, category, necessity) => {
+    console.log("createExpense", description, date, amount, category, necessity);
+    return axiosInstance.post("/expense", {
+        description,
+        dateOfCreation: formatDate(date),
+        amount,
+        category,
+        necessity
+    })
+    .then(response => {
+        console.log(response);
+        return response;
     })
     .catch(error => {
         console.error(error); // TODO: Toast
