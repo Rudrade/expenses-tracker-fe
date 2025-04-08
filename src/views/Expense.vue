@@ -6,7 +6,7 @@
         <h2 v-else>New expense</h2>
         <br/>
 
-        <Form v-slot="$form" :initialValues :resolver @submit="onFormSubmit" class="flex flex-col gap-4 w-full sm:w-56">
+        <Form v-slot="$form" :initialValues :resolver @submit="onFormSubmit" class="flex flex-col gap-4 w-full sm:w-56" :key="formKey">
             <div class="flex flex-col gap-1">
                 <label for="description">Description *</label>
                 <InputText id="description" name="description" type="text" fluid placeholder="Insert the expense's description" autocomplete="off"/>
@@ -44,10 +44,10 @@
 <script setup>
 import { Form } from "@primevue/forms";
 import Button from 'primevue/button';
-import { ref } from "vue";
+import { ref, onBeforeMount } from "vue";
 import { InputText, Message } from "primevue";
 import DatePicker from 'primevue/datepicker';
-import { createExpense } from "@/services/ExpensesService";
+import { createExpense, getExpense } from "@/services/ExpensesService";
 import { useToast } from "primevue/usetoast";
 import Toast from 'primevue/toast';
 
@@ -60,6 +60,26 @@ const initialValues = ref({
 });
 
 const props = defineProps(["id"]);
+
+const formKey = ref(0);
+
+onBeforeMount(() => {
+    if (props.id && props.id !== "new") {
+        // Fetch the expense data and set it to initialValues
+        // Assuming you have a function to fetch the expense by ID
+        getExpense(props.id).then(expense => {
+            initialValues.value = {
+                date: new Date(expense.date),
+                description: expense.description,
+                amount: expense.amount,
+                category: expense.category,
+                necessity: expense.necessity
+            };
+            formKey.value++; // Update the form key to trigger re-rendering
+        });
+    }
+});
+
 
 const toast = useToast();
 
@@ -90,6 +110,7 @@ const onFormSubmit = ({valid, states}) => {
         document.getElementById("submit").setAttribute("disabled", "true");
 
         createExpense(
+            props.id && props.id !== "new" ? props.id : null,
             states.description?.value,
             states.date?.value,
             states.amount?.value,
@@ -98,10 +119,11 @@ const onFormSubmit = ({valid, states}) => {
         ).then(response => {
             document.getElementById("submit").removeAttribute("disabled");
             if (response.status === 200) {
+                const message = props.id && props.id !== "new" ? "Expense updated successfully!" : 'Expense created successfully!';
                 toast.add({
                     severity: 'success',
                     summary: 'Success',
-                    detail: 'Expense created successfully!',
+                    detail: message,
                     life: 3000
                 });
             } else {
