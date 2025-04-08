@@ -45,9 +45,10 @@ export const listExpenses = (offset, limit, description, category, necessity, st
     })
 }
 
-export const createExpense = (description, date, amount, category, necessity) => {
+export const createExpense = (id, description, date, amount, category, necessity) => {
     console.log("createExpense", description, date, amount, category, necessity);
     return axiosInstance.post("/expense", {
+        id,
         description,
         dateOfCreation: formatDate(date),
         amount,
@@ -61,5 +62,19 @@ export const createExpense = (description, date, amount, category, necessity) =>
     .catch(error => {
         console.error(error); // TODO: Toast
         throw error;
+    })
+}
+
+export const getExpense = (id) => {
+    return axiosInstance.get("/expense/" + id)
+    .then(response => {
+        return {
+            id: response.data.id,
+            date: response.data.dateOfCreation,
+            description: response.data.description,
+            amount: response.data.amount,
+            category: response.data.category,
+            necessity: response.data.necessity
+        };
     })
 }

@@ -69,6 +69,12 @@
                     <InputText v-model="filterModel.value" type="text" placeholder="Search by necessity" @change="renderPage(filterModel)"/>
                 </template>
             </Column>
+
+            <Column>
+                <template #body="{data}">
+                    <Button icon="pi pi-pencil" rounded severity="info" @click="() => {$router.push({name: 'expense', params: {id:data.id}})}"/>
+                </template>
+            </Column>
         </DataTable>
     </div>
 </template>
