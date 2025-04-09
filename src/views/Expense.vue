@@ -2,7 +2,7 @@
     <Toast position="top-right" />
     <div style="width: 40%">
         
-        <h2 v-if="id === null">Edit expense</h2>
+        <h2 v-if="id !== 'new'">Edit expense</h2>
         <h2 v-else>New expense</h2>
         <br/>
 
