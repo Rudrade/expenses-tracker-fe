@@ -1,4 +1,5 @@
 <template>
+    <Toast position="top-right" />
     <div  style="width: 80%">
         <DataTable 
         :value="expenses"
@@ -72,7 +73,8 @@
 
             <Column>
                 <template #body="{data}">
-                    <Button icon="pi pi-pencil" rounded severity="info" @click="() => {$router.push({name: 'expense', params: {id:data.id}})}"/>
+                    <Button icon="pi pi-pencil" rounded severity="info" @click="() => {$router.push({name: 'expense', params: {id:data.id}})}" style="margin-right: 2px"/>
+                    <Button icon="pi pi-trash" rounded severity="danger" @click="removeExpense(data.id)"/>
                 </template>
             </Column>
         </DataTable>
@@ -85,14 +87,17 @@ import Column from "primevue/column";
 import InputText from 'primevue/inputtext';
 import DatePicker from "primevue/datepicker";
 import Button from "primevue/button";
+import { useToast } from "primevue/usetoast";
+import Toast from 'primevue/toast';
 
-import { listExpenses } from "@/services/ExpensesService";
+import { listExpenses, deleteExpense } from "@/services/ExpensesService";
 import { formatDate, formatCurrency } from "@/utils";
 
 import { onMounted, ref } from "vue";
 
 const expenses = ref([]);
 const totalExpenses = ref(0);
+const toast = useToast();
 
 onMounted(() => {
     renderPage();
@@ -131,4 +136,28 @@ const filters = ref({
     necessity: { matchMode: "contains", alias: "necessity" },
     date: { matchMode: "date", alias: "date" }
 });
+
+const removeExpense = (id) => {
+    deleteExpense(id)
+        .then(response => {
+            console.log("deletd!");
+            toast.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: "Expense deleted with sucess",
+                life: 3000
+            });
+            renderPage();
+        })
+        .catch(error => {
+            console.log("ERROR DELETING");
+            toast.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Failed to delete expense: ' + error.message,
+                life: 3000
+            });
+            
+        });
+}
 </script>

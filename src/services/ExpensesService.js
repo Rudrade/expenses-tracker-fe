@@ -78,3 +78,11 @@ export const getExpense = (id) => {
         };
     })
 }
+
+export const deleteExpense = (id) => {
+    return axiosInstance.delete("/expense/" + id)
+        .then(response => {
+            console.log(response);
+            return response.status;
+        });
+}
