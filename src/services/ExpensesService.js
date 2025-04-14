@@ -25,14 +25,7 @@ export const listExpenses = (offset, limit, description, category, necessity, st
         for (let i = 0; i < response.data.expenses.length; i++) {
             const expense = response.data.expenses[i];
 
-            arrExpenses.push({
-                id: expense.id,
-                date: expense.dateOfCreation,
-                description: expense.description,
-                amount: expense.amount,
-                category: expense.category,
-                necessity: expense.necessity
-            });
+            arrExpenses.push(formatData(expense));
         }
         return {
             expenses: arrExpenses,
@@ -68,14 +61,7 @@ export const createExpense = (id, description, date, amount, category, necessity
 export const getExpense = (id) => {
     return axiosInstance.get("/expense/" + id)
     .then(response => {
-        return {
-            id: response.data.id,
-            date: response.data.dateOfCreation,
-            description: response.data.description,
-            amount: response.data.amount,
-            category: response.data.category,
-            necessity: response.data.necessity
-        };
+        return formatData(response.data);
     })
 }
 
@@ -86,3 +72,27 @@ export const deleteExpense = (id) => {
             return response.status;
         });
 }
+
+export const getRecentExpenses = () => {
+    return axiosInstance.get("/expense/recent")
+        .then(response => {
+            const lst = response.data.expenses;
+            
+            const arrExpenses = [];
+            for (let i = 0; i < response.data.VITE_BACKEND_URLcount; i++) {
+                arrExpenses.push(formatData(lst[i]));
+            }
+
+            console.log("arrExpenses", arrExpenses)
+            return arrExpenses;
+        });
+}
+
+const formatData = (data) => ({
+    id: data.id,
+    date: data.dateOfCreation,
+    description: data.description,
+    amount: data.amount,
+    category: data.category,
+    necessity: data.necessity
+})
